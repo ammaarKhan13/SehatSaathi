@@ -14,14 +14,13 @@ import {
 import Markdown from '@/components/markdown';
 
 interface ChatComponentProps {
-  reportData?: string;
+  reportData?: string | null;
 }
 
 const ChatComponent = ({ reportData }: ChatComponentProps) => {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, data } =
-    useChat({
-      api: "/api/medichatgemini",
-    });
+  const { messages, input, handleInputChange, handleSubmit, isLoading, data } = useChat({
+    api: "/api/medichatgemini",
+  });
 
   // Safely extract retrievals data
   const getRetrievals = () => {
@@ -47,7 +46,17 @@ const ChatComponent = ({ reportData }: ChatComponentProps) => {
 
       {/* Messages Area */}
       <div className="flex-1 overflow-auto rounded-lg border bg-background p-4">
-        <Messages messages={messages} isLoading={isLoading} />
+        {messages.length > 0 ? (
+          <Messages messages={messages} isLoading={isLoading} />
+        ) : reportData ? (
+          <p className="text-sm text-gray-400">
+            Your report has been loaded. You can now ask questions about it.
+          </p>
+        ) : (
+          <p className="text-sm text-gray-400">
+            No report has been uploaded. You can ask general medical questions.
+          </p>
+        )}
       </div>
 
       {/* Relevant Info Section */}
@@ -85,12 +94,12 @@ const ChatComponent = ({ reportData }: ChatComponentProps) => {
         <Textarea
           value={input}
           onChange={handleInputChange}
-          placeholder="Ask about your medical report..."
+          placeholder={reportData ? "Ask about your medical report..." : "Ask a general medical question..."}
           className="min-h-[100px] p-4 rounded-lg resize-none"
         />
         <Button 
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || input.trim() === ""}
           className="ml-auto"
         >
           {isLoading ? (
