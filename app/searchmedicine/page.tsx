@@ -100,7 +100,7 @@ export default function Home() {
               <Button 
                 onClick={() => searchMedicines(query)} 
                 disabled={isSearching}
-                className="bg-primary hover:bg-primary/90 text-white dark:text-white"
+                className="bg-primary hover:bg-primary/90 text-white dark:text-black"
               >
                 {isSearching ? (
                   'Searching...'
