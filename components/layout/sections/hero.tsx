@@ -21,7 +21,7 @@ export const HeroSection = () => {
           </div>
 
           <p className="max-w-screen-sm mx-auto text-xl text-muted-foreground dark:text-gray-300">
-            {`Leverage the power of Generative AI for medical report analysis, food product insights, and medicine queries. Get actionable health insights with ease.`}
+            {"Bringing Affordable Diagnostics to Every Corner – Empowering Rural Healthcare with AI-driven Medical Insights"}
           </p>
 
           <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
@@ -54,7 +54,7 @@ export const HeroSection = () => {
             <div className="relative pt-[56.25%]">
               <iframe
                 className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
-                src="https://www.youtube.com"
+                src="https://www.youtube.com/embed/ZE68QNxeXjg"
                 title="Team QuantumQuest - SehatSaathi"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
