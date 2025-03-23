@@ -7,7 +7,9 @@ import { NextResponse } from 'next/server';
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 60;
 
-
+// const pinecone = new Pinecone({
+//     apiKey: process.env.PINECONE_API_KEY ?? "",
+// });
 
 const google = createGoogleGenerativeAI({
     baseURL: 'https://generativelanguage.googleapis.com/v1beta',
@@ -31,6 +33,7 @@ export async function POST(req: Request) {
         const reportData: string = reqBody.data.reportData;
         const query = `Represent this for searching relevant passages: patient medical report says: \n${reportData}. \n\n${userQuestion}`;
 
+        // const retrievals = await queryPineconeVectorStore(pinecone, 'index-one', "testspace", query);
 
         const finalPrompt = `Here is a summary of a patient's clinical report, and a user query. Some generic clinical findings are also provided that may or may not be relevant for the report.
         Go through the clinical report and answer the user query.
@@ -49,7 +52,9 @@ export async function POST(req: Request) {
         `;
 
         const data = new StreamData();
-        
+        // data.append({
+        //     retrievals: retrievals
+        // });
 
         const result = await streamText({
             model: model,

@@ -1,67 +1,144 @@
-"use client";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { useTheme } from "next-themes";
+import GithubIcon from "@/components/icons/github-icon";
+import LinkedInIcon from "@/components/icons/linkedin-icon";
+import XIcon from "@/components/icons/x-icon";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import Image from "next/image";
 import Link from "next/link";
 
-export const HeroSection = () => {
-  const { theme } = useTheme();
+interface TeamProps {
+  imageUrl: string;
+  firstName: string;
+  lastName: string;
+  positions: string[];
+  socialNetworks: SocialNetworkProps[];
+}
+
+interface SocialNetworkProps {
+  name: string;
+  url: string;
+}
+
+export const TeamSection = () => {
+  const teamList: TeamProps[] = [
+    {
+      imageUrl: "/Ammaarlinkedin.jpg",
+      firstName: "Ammaar",
+      lastName: "Khan",
+      positions: ["Student at DJSCE, Mumbai", "AI/ML Developer"],
+      socialNetworks: [
+        {
+          name: "LinkedIn",
+          url: "https://www.linkedin.com/in/ammaar-khan-3420671b6/",
+        },
+        {
+          name: "Github",
+          url: "https://github.com/ammaarKhan13",
+        }
+      ],
+    },
+    {
+      imageUrl: "/aditya.jpg",
+      firstName: "Aditya",
+      lastName: "Deshpande",
+      positions: ["Student at DJSCE, Mumbai", "AI/ML Developer"],
+      socialNetworks: [
+        {
+          name: "LinkedIn",
+          url: "https://www.linkedin.com/in",
+        },
+        {
+          name: "Github",
+          url: "https://github.com/AdiD-code",
+        }
+      ],
+    }
+    
+  ];
+
+  const socialIcon = (socialName: string) => {
+    switch (socialName) {
+      case "LinkedIn":
+        return <LinkedInIcon />;
+      case "Github":
+        return <GithubIcon />;
+      case "X":
+        return <XIcon />;
+    }
+  };
+
   return (
-    <section className="container w-full px-4 md:px-8 lg:px-16">
-      <div className="grid place-items-center gap-8 mx-auto py-20 md:py-32 lg:max-w-screen-xl text-center">
-        <div className="text-center space-y-8">
-          <div className="max-w-screen-md mx-auto text-center text-4xl md:text-6xl font-bold">
-            <h1 className="dark:text-white">
-              Empowering Your Health with
-              <span className="text-transparent px-2 bg-gradient-to-r from-[#D247BF] to-primary bg-clip-text">
-                Sehat Saathi
-              </span>
-            </h1>
-          </div>
+    <section id="team" className="center container py-24 sm:py-32">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center space-y-4 mb-12">
+          <h2 className="text-lg text-primary font-medium tracking-wider">
+            Our Team
+          </h2>
 
-          <p className="max-w-screen-sm mx-auto text-xl text-muted-foreground dark:text-gray-300">
-            {"Bringing Affordable Diagnostics to Every Corner – Empowering Rural Healthcare with AI-driven Medical Insights"}
-          </p>
+          <h3 className="text-3xl md:text-4xl font-bold">
+            The Minds Behind Sehat Saathi
+          </h3>
+        </div>
 
-          <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
-            <Button
-              asChild
-              className="w-full md:w-auto px-8 py-3 font-bold group/arrow dark:bg-primary dark:text-white dark:bg-black dark:hover:bg-primary/90"
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
+          {teamList.map(({ imageUrl, firstName, lastName, positions, socialNetworks }, index) => (
+            <Card
+              key={index}
+              className="group bg-muted/50 dark:bg-card border-border/50 hover:border-border/100 transition-colors duration-200 max-w-sm"
             >
-              <Link href="/food">
-                Get Started
-                <ArrowRight className="size-5 ml-2 group-hover/arrow:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
+              <CardHeader className="p-0">
+                <div className="h-[200px] overflow-hidden"> {/* Adjusted height here */}
+                  <Image
+                    src={imageUrl}
+                    alt={`${firstName} ${lastName}`}
+                    width={300}  // Reduced width
+                    height={200} // Reduced height
+                    className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
+                    priority={index < 3}
+                  />
+                </div>
+                <div className="p-6">
+                  <CardTitle className="text-xl">
+                    {firstName}
+                    <span className="text-primary ml-2">{lastName}</span>
+                  </CardTitle>
+                </div>
+              </CardHeader>
 
-            <Button
-              asChild
-              variant="secondary"
-              className="w-full md:w-auto px-8 py-3 font-bold dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-            >
-              <Link
-                href="https://github.com/ammaarKhan13/SehatSaathi"
-                target="_blank"
-              >
-                Github Repository
-              </Link>
-            </Button>
-          </div>
+              <CardContent className="p-6 pt-0">
+                <div className="space-y-1">
+                  {positions.map((position, idx) => (
+                    <p key={idx} className="text-muted-foreground">
+                      {position}
+                      {idx < positions.length - 1 && <span>,</span>}
+                    </p>
+                  ))}
+                </div>
+              </CardContent>
 
-          {/* Responsive YouTube Video Container */}
-          <div className="w-full max-w-4xl mx-auto mt-12">
-            <div className="relative pt-[56.25%]">
-              <iframe
-                className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
-                src="https://www.youtube.com/embed/ZE68QNxeXjg"
-                title="Team QuantumQuest - SehatSaathi"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
-            </div>
-          </div>
+              <CardFooter className="p-6 pt-0">
+                <div className="flex items-center gap-4">
+                  {socialNetworks.map(({ name, url }, idx) => (
+                    <Link
+                      key={idx}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                      aria-label={`${firstName}'s ${name}`}
+                    >
+                      {socialIcon(name)}
+                    </Link>
+                  ))}
+                </div>
+              </CardFooter>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
