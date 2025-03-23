@@ -3,22 +3,27 @@
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Settings, FileText } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReportComponent from "@/components/ReportComponent";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 import ChatComponent from "@/components/chatcomponent";
 
 const Home = () => {
   const { toast } = useToast();
-  const [reportData, setReportData] = useState("");
+  const [reportData, setReportData] = useState<string | null>(null);
+
+  useEffect(() => {
+    console.log("Updated Report Data:", reportData);
+  }, [reportData]);
 
   const onReportConfirmation = (data: string) => {
+    if (!data) {
+      toast({ variant: "destructive", description: "Report data is empty!" });
+      return;
+    }
+
     setReportData(data);
-    toast({
-      title: "Success",
-      description: "Report updated successfully",
-      variant: "default",
-    });
+    toast({ title: "Report Confirmed", description: "Medical report successfully updated." });
   };
 
   return (
@@ -52,7 +57,7 @@ const Home = () => {
             </DrawerContent>
           </Drawer>
         </header>
-        
+
         <main className="flex-1 p-4">
           <ChatComponent reportData={reportData} />
         </main>
