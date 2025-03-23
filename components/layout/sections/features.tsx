@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Pill, BarChart } from "lucide-react";
+import { FileText, Pill, BarChart, Ambulance, HeartPulse, HeartHandshake } from "lucide-react";
 import React from "react";
 
 interface FeaturesProps {
@@ -10,6 +10,12 @@ interface FeaturesProps {
 }
 
 const featureList: FeaturesProps[] = [
+  {
+    icon: <Ambulance className="w-8 h-8 text-primary" />,
+    title: "Low-Resource Compatibility",
+    description:
+      "Works on basic devices and low-bandwidth networks, making it accessible in rural areas.",
+  },
   {
     icon: <FileText className="w-8 h-8 text-primary" />,
     title: "Medical Report Analyzer",
@@ -29,10 +35,16 @@ const featureList: FeaturesProps[] = [
       "Processes text or image-based nutrition labels and extracts insights using the Gemini API to offer detailed nutrition information and clarity.",
   },
   {
-    icon: <BarChart className="w-8 h-8 text-primary" />,
-    title: "AI Disease Detector",
+    icon: <HeartPulse className="w-8 h-8 text-primary" />,
+    title: "MedBuddy",
     description:
-      "ML model to analyse the user symptoms and give diseases based on the symptoms.",
+      "MedBuddy is an AI-powered medical chatbot that provides instant, reliable health advice, and symptom analysis",
+  },
+  {
+    icon: <HeartHandshake className="w-8 h-8 text-primary" />,
+    title: "Community Health Mode",
+    description:
+      "Enables health workers to use the platform for collective diagnostics in underserved areas.",
   },
 ];
 
@@ -41,9 +53,9 @@ export const FeaturesSection: React.FC = () => {
     <section className="container mx-auto px-6 sm:px-12 lg:px-24 py-24">
       <div className="text-center">
         <h3 className="text-primary font-medium">Features</h3>
-        <h1 className="text-4xl font-bold">What Makes MedNourish AI Different</h1>
+        <h1 className="text-4xl font-bold">What Makes Sehat Saathi Different</h1>
         <p className="mt-4 text-muted-foreground max-w-3xl mx-auto">
-          Leverage the power of Generative AI to analyze medical reports, understand food nutrition, and get insightful medicine details. Here's how we make healthcare smarter.
+        Sehat Saathi is an AI-powered medical chatbot designed for low-resource settings, offering multilingual support, instant medical advice, and report analysis to bridge healthcare gaps for rural communities.
         </p>
       </div>
 
