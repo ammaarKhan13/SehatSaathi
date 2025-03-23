@@ -54,7 +54,7 @@ export const HeroSection = () => {
             <div className="relative pt-[56.25%]">
               <iframe
                 className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
-                src="https://youtu.be/r5ZayD2Zkoo"
+                src="https://www.youtube.com/embed/r5ZayD2Zkoo"
                 title="Team QuantumQuest - SehatSaathi"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
