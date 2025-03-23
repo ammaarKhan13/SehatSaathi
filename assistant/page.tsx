@@ -1,0 +1,154 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Send } from 'lucide-react';
+
+interface Message {
+  role: 'user' | 'assistant';
+  text: string;
+}
+
+const MAX_RECENT_QUERIES = 5;
+
+export default function AssistantPage() {
+  const [query, setQuery] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [error, setError] = useState('');
+  const [recentQueries, setRecentQueries] = useState<string[]>([]);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('recentMedicalQueries');
+    if (saved) {
+      setRecentQueries(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const addToRecentQueries = (query: string) => {
+    const updated = [query, ...recentQueries.filter(q => q !== query)].slice(0, MAX_RECENT_QUERIES);
+    setRecentQueries(updated);
+    localStorage.setItem('recentMedicalQueries', JSON.stringify(updated));
+  };
+
+  const sendMessage = async () => {
+    if (!query.trim()) return;
+    
+    setMessages(prev => [...prev, { role: 'user', text: query }]);
+    setQuery('');
+    setIsTyping(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessages(prev => [...prev, { role: 'assistant', text: formatResponse(data.response) }]);
+        addToRecentQueries(query);
+      } else {
+        throw new Error(data.error || 'Error fetching response');
+      }
+    } catch (err) {
+      console.error('Medical assistant error:', err);
+      setError(err instanceof Error ? err.message : 'Error fetching response');
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  // Handle pressing Enter key to send message
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && !isTyping) {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
+  // Function to format assistant response for better readability
+  const formatResponse = (text: string) => {
+    return text.replace(/\n/g, "\n\n"); // Add spacing for better readability
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center">
+      <main className="container mx-auto px-4 py-8 max-w-3xl">
+        
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h2 className="text-lg text-primary font-medium tracking-wider mb-2">
+
+            
+            AI MEDICAL ASSISTANT
+          </h2>
+          <h1 className="text-3xl font-bold text-foreground mb-4">
+            Chat with Our Medical Assistant
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Get insights on diseases, symptoms, treatments, and first aid.
+          </p>
+        </div>
+
+        {/* Chat Box */}
+        <Card className="border-secondary/50 bg-black text-white dark:bg-card dark:text-foreground">
+          <CardHeader>
+            <CardTitle className="text-xl">Medical Assistant Chat</CardTitle>
+          </CardHeader>
+          <CardContent className="h-96 overflow-y-auto space-y-4 p-4">
+            {messages.map((msg, index) => {
+              const isUser = msg.role === 'user';
+              const textLength = msg.text.length;
+              let bubbleWidth = "max-w-xs";
+
+              // Dynamically adjust message bubble width based on text length
+              if (textLength > 100) {
+                bubbleWidth = "max-w-md"; // Medium width for longer queries
+              }
+              if (textLength > 200) {
+                bubbleWidth = "max-w-lg"; // Larger width for very long messages
+              }
+
+              return (
+                <div 
+                  key={index} 
+                  className={`p-3 rounded-lg ${bubbleWidth} ${isUser ? 'bg-gray-700 ml-auto text-left' : 'bg-gray-900 mr-auto text-left'}`}
+                >
+                  <p className="text-white">{msg.text}</p>
+                </div>
+              );
+            })}
+            {isTyping && <p className="text-gray-400">Assistant is typing...</p>}
+            <div ref={chatEndRef} />
+          </CardContent>
+        </Card>
+
+        {/* Input Field */}
+        <div className="flex items-center w-full mt-4">
+          <Input 
+            type="text" 
+            value={query} 
+            onChange={(e) => setQuery(e.target.value)} 
+            onKeyDown={handleKeyDown} // Handle Enter key
+            placeholder="Type a medical question..." 
+            className="flex-grow bg-gray-800 text-white p-3 rounded-lg" 
+          />
+          <Button onClick={sendMessage} disabled={isTyping} className="ml-3 bg-primary text-white">
+            <Send className="w-5 h-5" />
+          </Button>
+        </div>
+      </main>
+    </div>
+  );
+}
